@@ -1,4 +1,21 @@
 
+mod Company {
+    pub struct Company {
+        pub name: String
+    }
+
+    impl Company {
+        pub fn public_method(&self) {
+            print!("public method");
+        }
+
+        fn private_method(&self) {
+            println!("private method")
+        }
+    }
+}
+
+
 #[derive(Debug)]
 struct User {
     username: String,
@@ -8,8 +25,33 @@ struct User {
 }
 
 impl User {
+    fn hello(&self) {
+        println!("public hello");
+    }
+
     fn is_active(&self) -> bool {
         self.active
+    }
+
+    fn change_email(self, new_email: String) -> User {
+        User { 
+            email: new_email,
+            ..self
+         }
+    }
+}
+
+impl User {
+    fn create_username_email_string(&self) -> String {
+        String::from(self.email.to_string() + " " + &self.username.to_string())
+
+    }
+}
+
+impl User {
+    //Static function
+    fn create_random() -> User {
+        User { username: String::from("randomUsername"), email: String::from("random@email.com"), sign_in_count: 1, active: true }
     }
 }
 
@@ -62,8 +104,21 @@ fn main() {
 
     println!("{:?}", unnamed_tuple);
 
-    println!("I user 3 active?: {}", user3.is_active())
-    
+    println!("I user 3 active?: {}", user3.is_active());
+    println!("{}", user3.create_username_email_string());
+    println!("{:?}", User::create_random());
+
+    let user4 = user3.change_email(String::from("modified@email.com"));
+    //println!("{:?}", user3); //Will fail as it was borrowed
+    println!("{:?}", user4);
+    user4.hello();
+
+    let company = Company::Company{
+        name: String::from("company name"),
+    };
+
+    company.public_method()
+
 }
 
 fn build_random_user(email: String) -> User {
